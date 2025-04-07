@@ -1,0 +1,7 @@
+-- SQL kommentaar
+-- SQL Server Management Stuudio
+-- connect to 
+--(localdb)\mssqllocaldb
+--Authentification: Windows Auth - admini õigused localhostis
+--Authentification: SQL Server Auth - varem loodud kasutajad
+--New Query
