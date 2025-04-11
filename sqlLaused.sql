@@ -1,87 +1,114 @@
--- SQL kommentaar
--- SQL Server Management Stuudio
--- connect to 
---localhost
---Authentification:
---Kasutajanimi - root
---Parooli ei ole
+--SQL kommentaar
+-- XAMPP Control Panel (Start Apache, Start MySQL)
+-- connect to
+-- localhost
+--Authentification: 
+--kasutajanimi - root 
+-- parool ei ole
 --SQL:
-CREATE DATABASE jegorov1;
+CREATE DATABASE jegorov;
 --Object Explorer on vaja pidevalt uuendada käsitsi!
-USE jegorov1;
+vali hiirega andmebaasi
 --tabeli loomine
 CREATE TABLE opilane(
-	opilaneID int Primary Key identity(1,1),
-	eesnimi varchar(25),
-	perenimi varchar(25) Unique,
-	synniaeg date,
-	aadress TEXT,
-	opilaskodu bit
+opilaneID int Primary Key AUTO_INCREMENT,
+eesnimi varchar(25),
+perenimi varchar(30) Unique,
+synniaeg date,
+aadress TEXT,
+opilaskodu bit
 );
--- select table
 SELECT * FROM opilane;
-
---tabeli kustutamine 
+--tabeli kustutamine
 DROP table opilane;
-
 --andmete lisamine tabelisse
 INSERT INTO opilane(eesnimi, perenimi, synniaeg, aadress, opilaskodu)
-VALUES ('Gerald', 'Rodger', '1211-12-08', 'Rivia', '1'),
-    ('Steve', 'Sigma', '2011-12-19', 'Minecraft', '0'),
-    ('Lux', 'light', '2015-07-14', 'Demacia', '0'),
-    ('Herobrine', 'Hero', '2013-12-19', 'Minecraft', '0'),
-    ('Irelia', 'sword', '2017-07-14', 'Demacia', '0');
+VALUES ('Mark', 'Maslov', '2007.09.4', 'Tallinn', 0),
+('Denis', 'Svarkov', '2007.01.17', 'Tallinn', 0),
+('Marat', 'Saunkans', '2007.05.7', 'Maardu', 0),
+('Andrei', 'Kulberg', '2006.02.27', 'Kehra', 0)
 
---tabel Rühm
---identity(1,1) - automaatselt täitab 1,2,...
-CREATE TABLE ryhm(
-ryhmID int not null primary key identity(1,1),
-ryhm VARCHAR(10) UNIQUE,
-osakond VARCHAR(20),
+-- järgmine tund
+CREATE DATABASE jegorov;
+--Object Explorer on vaja pidevalt uuendada käsitsi!
+USE jegorov;
+CREATE TABLE opilane(
+opilaneID int Primary Key identity(1,1),
+eesnimi varchar(25),
+perenimi varchar(30) Unique,
+synniaeg date,
+aadress TEXT,
+opilaskodu bit
 );
-INSERT INTO ryhm(ryhm, osakond)
-VALUES ('TITpv24','IT'),('KRRpv23','Rätsep'),('MEHpv23','Mehatronik')
-
-SELECT * FROM ryhm;
---lisame uus veerg RyhmID tabelisse opilane
-ALTER TABLE opilane ADD ryhmID int;
-
 SELECT * FROM opilane;
---lisame foreing key veergule ryhmID mis on seotud
---tabeliga ryhm ja veerguga ryhmID
+--tabeli kustutamine
+DROP table opilane;
+--andmete lisamine tabelisse
+INSERT INTO opilane(eesnimi, perenimi, synniaeg, aadress, opilaskodu)
+VALUES ('Mark', 'Maslov', '2007.09.4', 'Tallinn', 0),
+('Denis', 'Svarkov', '2007.01.17', 'Tallinn', 0),
+('Marat', 'Saunkans', '2007.05.7', 'Maardu', 0),
+('Andrei', 'Kulberg', '2006.02.27', 'Kehra', 0)
+--tabel ryhm
+--identity(1,1) automaatselt täidab 1,2,3..
+create table ryhm(
+ryhmID int not null primary key identity(1,1),
+ryhm varchar(10) unique,
+osakond varchar(20)
+);
+insert into ryhm(ryhm, osakond)
+Values ('TITpv23', 'IT'), ('KRRpv24','Rätsepp');
+
+Select * from ryhm;
+
+--lisame uus veerg RyhmID tabelisse opilane
+alter table opilane ADD ryhmID int;
+select * from opilane;
+--lisame foreign key
+
 ALTER TABLE opilane
-ADD FOREIGN KEY (ryhmID) references ryhm(ryhmID);
+ADD foreign key (ryhmID) references ryhm(ryhmID);
 
 --foreign key kontroll
-INSERT INTO opilane(eesnimi, perenimi, synniaeg, aadress, opilaskodu, ryhmID)
-VALUES ('Timur', 'Gnosh', '1211-02-08', 'Riia', 1, 3);
 
-SELECT * FROM opilane;
+INSERT INTO opilane
+(eesnimi, perenimi, synniaeg, aadress, opilaskodu, ryhmID)
+VALUES ('Artjem', 'Jegorov', '2003.04.11', 'Tallinn', 0, 2);
+
+select * from opilane;
 --kasutame seos tabelite vahel - JOIN
-SELECT * FROM opilane JOIN ryhm
-ON opilane.ryhmID=ryhm,ryhmID;
+select * from opilane join ryhm
+on opilane.ryhmID=ryhm.ryhmID;
 
-SELECT opilane.perenimi, ryhm.ryhm FROM opilane JOIN ryhm
-ON opilane.ryhmID=ryhm,ryhmID;
+select opilane.perenimi, ryhm.ryhm from opilane join ryhm
+on opilane.ryhmID=ryhm.ryhmID;
+--lihtsam vaade
+select o.perenimi, r.ryhm, o.aadress
+from opilane o join ryhm r
+on o.ryhmID=r.ryhmID;
 
---lihtsaim vaade
-SELECT o.perenimi, r.ryhm
-FROM opilane o JOIN ryhm r
-ON o.ryhmID=r,ryhmID;
-
---tabeli kustutamine 
-DROP table ryhm;
-
---tabel hinne
-CREATE TABLE hinne(
+create table hinne(
 hinneID int primary key identity(1,1),
-hinne int, 
-opilaneid int,
-oppeaine VARCHAR(50)
+opilaneID int,
+hinne int,
+oppeaine varchar(20)
 );
-ALTER TABLE hinne
+
+select * from hinne;
+alter table hinne
 ADD foreign key (opilaneID) references opilane(opilaneID);
-INSERT INTO hinne(opilaneID, opilane, hinne),
-VALUES(3, 'andmebaasid', 5);
-SELECT * FROM opilane JOIN hinne
-ON opilane.opilaneID=hinne.hinneID;
+
+create table opetaja(
+opetajaID int PRIMARY KEY AUTO_INCREMENT,
+    nimi varchar(20),
+    perenimi varchar(20),
+    telefon text
+);
+
+insert into ryhm(ryhm, osakond, opetajaID)
+Values ('TITpv23', 'IT', 3), ('KRRpv24','Rätsepp', 1), ('TITpv24', 'IT', 2);
+
+insert into opetaja(nimi, perenimi, telefon)
+Values ('Jekaterina', 'Rätsep', 37256239572),
+('Irina', 'Merkulova', 37256385895),
+('Mikhail', 'Agapov', 880084675349572);
