@@ -1,10 +1,11 @@
 -- SQL kommentaar
 -- SQL Server Management Stuudio
 -- connect to 
---(localdb)\mssqllocaldb
---Authentification: Windows Auth - admini õigused localhostis
---Authentification: SQL Server Auth - varem loodud kasutajad
---New Query
+--localhost
+--Authentification:
+--Kasutajanimi - root
+--Parooli ei ole
+--SQL:
 CREATE DATABASE jegorov1;
 --Object Explorer on vaja pidevalt uuendada käsitsi!
 USE jegorov1;
